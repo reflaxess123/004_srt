@@ -106,10 +106,7 @@ def transcribe_audio(
         audio_path,
         language=language,
         word_timestamps=True,
-        vad_filter=True,  # Voice activity detection to remove silence
-        vad_parameters=dict(
-            min_silence_duration_ms=500  # Minimum silence duration to detect
-        )
+        vad_filter=False  # Keep all pauses for DaVinci Resolve compatibility
     )
 
     if pbar:
@@ -361,7 +358,7 @@ def main():
     except Exception as e:
         print(f"Fatal error: {e}", file=sys.stderr)
         sys.exit(1)
-
+фывл31231231джл23ж1длфывфывждлждлйждцулйцдулллдллддллдлддл
 
 if __name__ == "__main__":
     main()

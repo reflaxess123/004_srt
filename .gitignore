@@ -62,7 +62,10 @@ in/*.ogg
 in/*.wma
 in/*.opus
 
-# Keep example SRT files
+# Ignore all generated SRT files in out/ folder
+out/*.srt
+
+# Keep example SRT files in root
 !example*.srt
 
 # Whisper models cache
