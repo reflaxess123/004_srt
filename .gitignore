@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# UV
+.uv/
+uv.lock
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+# Ignore all video/audio files in in/ folder
+in/*.mp4
+in/*.avi
+in/*.mov
+in/*.mkv
+in/*.webm
+in/*.flv
+in/*.wmv
+in/*.m4v
+in/*.mpg
+in/*.mpeg
+in/*.wav
+in/*.mp3
+in/*.m4a
+in/*.flac
+in/*.aac
+in/*.ogg
+in/*.wma
+in/*.opus
+
+# Keep example SRT files
+!example*.srt
+
+# Whisper models cache
+~/.cache/huggingface/

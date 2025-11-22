@@ -1,0 +1,13 @@
+[project]
+name = "whisper-transcribe"
+version = "0.1.0"
+description = "Whisper Fast large v3 transcription for YouTube Shorts with DaVinci Resolve SRT support"
+requires-python = ">=3.10"
+dependencies = [
+    "faster-whisper>=1.0.0",
+    "ffmpeg-python>=0.2.0",
+    "tqdm>=4.66.0",
+]
+
+[dependency-groups]
+dev = []
