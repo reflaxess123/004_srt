@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Whisper Fast large v3 transcription script for YouTube Shorts
-Generates DaVinci Resolve compatible SRT files with max 10 characters per subtitle
+Generates DaVinci Resolve compatible SRT files and plain TXT files
 Batch processes all audio/video files from 'in' folder to 'out' folder
 """
 
@@ -170,6 +170,26 @@ def generate_srt(
         pbar.set_description(f"✓ Created {subtitle_index - 1} subtitles")
 
 
+def generate_txt(
+    segments: List[Tuple[str, float, float]],
+    output_path: str,
+    pbar: tqdm = None
+):
+    """
+    Generate plain text file with recognized text
+    """
+    if pbar:
+        pbar.set_description(f"💾 Generating TXT")
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        # Join all text segments with spaces
+        full_text = " ".join(text.strip() for text, _, _ in segments)
+        f.write(full_text)
+
+    if pbar:
+        pbar.set_description(f"✓ Created text file")
+
+
 def get_supported_files(directory: Path) -> List[Path]:
     """
     Get all supported audio/video files from directory
@@ -247,22 +267,23 @@ def process_batch(
               bar_format='{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]') as pbar_main:
 
         for file_path in pbar_main:
-            # Determine output path
-            output_path = output_dir / f"{file_path.stem}.srt"
+            # Determine output paths
+            output_srt_path = output_dir / f"{file_path.stem}.srt"
+            output_txt_path = output_dir / f"{file_path.stem}.txt"
 
             # Update main progress bar
             pbar_main.set_description(f"📊 [{processed+skipped+1}/{len(files)}] {file_path.name[:30]}")
 
             # Check if already processed
-            if output_path.exists():
+            if output_srt_path.exists() and output_txt_path.exists():
                 skipped += 1
                 pbar_main.write(f"   ⏭️  Skipped: {file_path.name} (already processed)")
                 continue
 
             try:
                 # Create sub-progress bar for this file
-                with tqdm(total=2, desc=f"   🎬 {file_path.name[:35]}",
-                         leave=False, ncols=100, bar_format='{desc} | {bar} {n}/2') as pbar_file:
+                with tqdm(total=3, desc=f"   🎬 {file_path.name[:35]}",
+                         leave=False, ncols=100, bar_format='{desc} | {bar} {n}/3') as pbar_file:
 
                     # Transcribe
                     segments = transcribe_audio(
@@ -274,11 +295,15 @@ def process_batch(
                     pbar_file.update(1)
 
                     # Generate SRT
-                    generate_srt(segments, str(output_path), max_chars=max_chars, pbar=pbar_file)
+                    generate_srt(segments, str(output_srt_path), max_chars=max_chars, pbar=pbar_file)
+                    pbar_file.update(1)
+
+                    # Generate TXT
+                    generate_txt(segments, str(output_txt_path), pbar=pbar_file)
                     pbar_file.update(1)
 
                 processed += 1
-                pbar_main.write(f"   ✅ Completed: {file_path.name} → {output_path.name}")
+                pbar_main.write(f"   ✅ Completed: {file_path.name} → {output_srt_path.name}, {output_txt_path.name}")
 
             except Exception as e:
                 errors += 1
@@ -307,7 +332,7 @@ def main():
     parser.add_argument(
         "-o", "--output-dir",
         default="out",
-        help="Output directory for SRT files (default: out)"
+        help="Output directory for SRT and TXT files (default: out)"
     )
     parser.add_argument(
         "-m", "--model",
@@ -358,7 +383,6 @@ def main():
     except Exception as e:
         print(f"Fatal error: {e}", file=sys.stderr)
         sys.exit(1)
-фывл31231231джл23ж1длфывфывждлждлйждцулйцдулллдллддллдлддл
 
 if __name__ == "__main__":
     main()
